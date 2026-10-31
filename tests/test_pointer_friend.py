@@ -2,7 +2,7 @@ from src import game_controller as gc
 from src.config import Settings
 from src.game_controller import GameController
 from src.gesture_classifier import classify, is_pointing
-from src.hand_tracker import split_players, primary_hand
+from src.hand_tracker import split_players, primary_hand, should_split_players
 from src.layout import buttons_for
 from src.pointer_ui import Button, DwellPointer, hit_test
 from tests.helpers import make_hand, ROCK, PAPER, SCISSORS
@@ -132,6 +132,13 @@ def test_split_players_single_hand_and_none():
     l = fake_hand(0.3)
     assert split_players([l]) == (l, None)
     assert split_players([]) == (None, None)
+
+
+def test_friend_menu_keeps_index_pointer_available():
+    assert not should_split_players(gc.FRIEND, gc.READY)
+    assert should_split_players(gc.FRIEND, gc.COUNTDOWN)
+    assert should_split_players(gc.FRIEND, gc.CAPTURE)
+    assert not should_split_players(gc.CPU, gc.CAPTURE)
 
 
 def test_split_players_biggest_hand_per_side():

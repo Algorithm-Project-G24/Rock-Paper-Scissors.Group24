@@ -25,6 +25,10 @@ def split_players(hands):
             max(right, key=_area) if right else None)
 
 
+def should_split_players(mode, state):
+    return mode == "FRIEND" and state in ("COUNTDOWN", "CAPTURE")
+
+
 class HandTracker:
     def __init__(self, settings):
         import mediapipe as mp   # imported here so the rest of the project is testable without it

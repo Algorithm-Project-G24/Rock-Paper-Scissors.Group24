@@ -44,7 +44,7 @@ def main():
         return 1
 
     try:
-        from src.hand_tracker import HandTracker, primary_hand, split_players
+        from src.hand_tracker import HandTracker, primary_hand, should_split_players, split_players
         tracker = HandTracker(settings)
     except ImportError as e:
         print(f"ERROR: mediapipe failed to load: {e}")
@@ -100,7 +100,7 @@ def main():
         if camera_ok:
             fh, fw = frame.shape[:2]
             hands = tracker.detect(frame)
-            if ctrl.mode == gc.FRIEND and ctrl.state in (gc.READY, gc.COUNTDOWN, gc.CAPTURE):
+            if should_split_players(ctrl.mode, ctrl.state):
                 a, b = split_players(hands)          # P1 = left half, P2 = right half
                 if a:
                     g1, hp1 = classify(a[0], settings.finger_extend_ratio), True
